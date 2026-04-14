@@ -9,11 +9,12 @@ const placeholder = document.getElementById('placeholder');
 // Sliders Izquierda
 const sliderBrillo = document.getElementById('brillo');
 const sliderContraste = document.getElementById('contraste');
-const sliderSaturation = document.getElementById('sliderSaturation');
+const sliderSaturation = document.getElementById('saturation');
 const sliderCalidad = document.getElementById('calidad');
 const sliderEscala = document.getElementById('escala');
 const valorBrillo = document.getElementById('valorBrillo');
 const valorContraste = document.getElementById('valorContraste');
+const valorSaturation = document.getElementById('valorSaturation');
 const valorCalidad = document.getElementById('valorCalidad');
 const valorEscala = document.getElementById('valorEscala');
 const formato = document.getElementById('formato');
@@ -62,6 +63,7 @@ upload.addEventListener("change", function (e) {
 function actualizarTextos() {
     valorBrillo.textContent = sliderBrillo.value;
     valorContraste.textContent = (sliderContraste.value / 100).toFixed(2);
+    valorSaturation.textContent = (sliderSaturation.value / 100).toFixed(2);
     valorCalidad.textContent = parseFloat(sliderCalidad.value).toFixed(1);
     valorEscala.textContent = sliderEscala.value + "%";
 }
