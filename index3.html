@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Mini Photoshop 2</title>
+    <style>
+        body {
+            margin: 0;
+            background: #121212;
+            color: white;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        header {
+            background: #1e1e1e;
+            padding: 10px;
+            text-align: center;
+            border-bottom: 2px solid #333;
+        }
+
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Columnas laterales */
+        .sidebar {
+            width: 300px;
+            background: #1e1e1e;
+            padding: 20px;
+            overflow-y: auto;
+            border-right: 1px solid #333;
+            border-left: 1px solid #333;
+        }
+
+        /* Centro */
+        .editor-view {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+            padding: 20px;
+            position: relative;
+        }
+
+        canvas#canvas {
+            max-width: 100%;
+            max-height: 80vh;
+            border: 2px solid #555;
+            background: #111;
+        }
+
+        canvas#rgbCanvas {
+            background: #fff;
+            cursor: crosshair;
+            margin-top: 10px;
+            width: 100%;
+            height: auto;
+        }
+
+        .section-title {
+            background: #333;
+            padding: 8px;
+            margin: 15px 0 10px 0;
+            border-radius: 4px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        .control-group {
+            margin-bottom: 15px;
+            font-size: 13px;
+        }
+
+        button {
+            width: 100%;
+            margin: 4px 0;
+            padding: 8px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+            background: #444;
+            color: white;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: #666;
+        }
+
+        .btn-action {
+            background: #3dcf97;
+        }
+
+        .btn-reset {
+            background: #c7307b;
+        }
+
+        .btn-download {
+            background: #615fdd;
+            margin-top: 10px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+        }
+
+        select {
+            width: 100%;
+            padding: 5px;
+            background: #333;
+            color: white;
+            border: 1px solid #555;
+        }
+
+        #info {
+            font-size: 11px;
+            background: #222;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .oculto {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <strong>Mini Photoshop </strong> | <input type="file" id="upload" accept="image/*">
+    </header>
+
+    <div class="main-container">
+        <div class="sidebar">
+            <div class="section-title">Ajustes Básicos</div>
+            <div class="control-group">
+                Brillo: <span id="valorBrillo">0</span>
+                <input type="range" id="brillo" min="-100" max="100" value="0">
+            </div>
+            <div class="control-group">
+                Contraste: <span id="valorContraste">1.00</span>
+                <input type="range" id="contraste" min="0" max="200" value="100">
+            </div>
+            <div class="control-group">
+                Saturación:
+                <input type="range" id="sliderSaturation" min="0" max="200" value="100">
+            </div>
+
+            <div class="section-title">Exportación</div>
+            <div class="control-group">
+                Calidad: <span id="valorCalidad">0.8</span>
+                <input type="range" id="calidad" min="0.1" max="1" step="0.1" value="0.8">
+            </div>
+            <div class="control-group">
+                Escala: <span id="valorEscala">100%</span>
+                <input type="range" id="escala" min="10" max="200" value="100">
+            </div>
+            <div class="control-group">
+                Formato:
+                <select id="formato">
+                    <option value="image/png">PNG</option>
+                    <option value="image/jpeg">JPG</option>
+                    <option value="image/webp">WEBP</option>
+                </select>
+            </div>
+
+            <button id="btnReset" class="btn-reset">Resetear Todo</button>
+            <button id="btnDescargar" class="btn-download">Descargar Imagen</button>
+
+            <div id="info">Sube una imagen para ver los datos...</div>
+        </div>
+
+        <div class="editor-view">
+            <div id="placeholder" style="color: #555;">Sube una imagen para empezar</div>
+            <canvas id="canvas" class="oculto"></canvas>
+        </div>
+
+        <div class="sidebar">
+            <div class="section-title">Filtros Frecuencia</div>
+            <button id="blur">Low-pass</button>
+            <button id="sharpen">High-pass</button>
+            <button id="bordes">Bordes</button>
+            <button id="relieve">Relieve</button>
+            <button id="lineash">Lineash</button>
+            <button id="lineasv">Lineasv</button>
+
+            <div class="section-title">Efectos y Ruido</div>
+            <button id="noise" style="background:#615fdd">Ruido Gaussiano</button>
+            <button id="salt" style="background:#4bc9ce">Sal y Pimienta</button>
+            <button id="median" style="background:#c7307b">Mediana</button>
+
+            <div class="control-group">
+                <label>Intensidad Ruido</label>
+                <input type="range" id="sliderNoise" min="0" max="100" value="0">
+            </div>
+
+            <div class="section-title">Selector de Color Pro</div>
+            <div class="control-group" style="text-align: center;">
+                <canvas id="rgbCanvas" width="500" height="400"
+                    style="width: 100%; height: auto; border-radius: 8px;"></canvas>
+            </div>
+
+            <div class="section-title">Herramientas de Lápiz</div>
+            <div class="control-group">
+                Grosor: <span id="valorGrosor">5</span>
+                <input type="range" id="sliderGrosor" min="1" max="50" value="5">
+            </div>
+            <button id="btnLimpiarTrazos" style="background:#444">Limpiar Lápiz (Solo trazos)</button>
+        </div>
+
+        <script src="photoshop3.js"></script>
+</body>
+
+</html>
