@@ -272,39 +272,61 @@ function actualizarSelector() {
     rgbCtx.fillStyle = "#1e1e1e";
     rgbCtx.fillRect(0, 0, rgbCanvas.width, rgbCanvas.height);
 
+    // --- NUEVOS LÍMITES (Más grandes) ---
+    // X inicial: 20 | Ancho: 360 | Cuadro Alto: 220
+    
     if (dibu_mousePressed) {
-        if (dibu_mouseX >= 100 && dibu_mouseX <= 350 && dibu_mouseY >= 60 && dibu_mouseY <= 260) {
-            h_sat = (dibu_mouseX - 100) / 250;
-            h_val = 1 - (dibu_mouseY - 60) / 200;
+        // Cuadro principal (Saturación y Brillo)
+        if (dibu_mouseX >= 20 && dibu_mouseX <= 380 && dibu_mouseY >= 20 && dibu_mouseY <= 240) {
+            h_sat = (dibu_mouseX - 20) / 360;
+            h_val = 1 - (dibu_mouseY - 20) / 220;
         }
-        if (dibu_mouseX >= 100 && dibu_mouseX <= 350 && dibu_mouseY >= 280 && dibu_mouseY <= 300) h_hue = ((dibu_mouseX - 100) / 250) * 360;
-        if (dibu_mouseX >= 100 && dibu_mouseX <= 350 && dibu_mouseY >= 320 && dibu_mouseY <= 340) h_alpha = (dibu_mouseX - 100) / 250;
+        // Barra Hue (Matiz)
+        if (dibu_mouseX >= 20 && dibu_mouseX <= 380 && dibu_mouseY >= 260 && dibu_mouseY <= 290) {
+            h_hue = ((dibu_mouseX - 20) / 360) * 360;
+        }
+        // Barra Alpha (Opacidad)
+        if (dibu_mouseX >= 20 && dibu_mouseX <= 380 && dibu_mouseY >= 310 && dibu_mouseY <= 340) {
+            h_alpha = (dibu_mouseX - 20) / 360;
+        }
     }
 
     let base = hsvToRgbLocal(h_hue, 1, 1);
     let final = hsvToRgbLocal(h_hue, h_sat, h_val);
     colorActualParaLapiz = `rgba(${final.r}, ${final.g}, ${final.b}, ${h_alpha})`;
 
-    // Dibujar Cuadro
+    // 1. Dibujar Cuadro (Ahora de 360x220)
     rgbCtx.fillStyle = `rgb(${base.r},${base.g},${base.b})`;
-    rgbCtx.fillRect(100, 60, 250, 200);
-    // Degradados
-    let w = rgbCtx.createLinearGradient(100, 0, 350, 0); w.addColorStop(0, "white"); w.addColorStop(1, "transparent");
-    rgbCtx.fillStyle = w; rgbCtx.fillRect(100, 60, 250, 200);
-    let b = rgbCtx.createLinearGradient(100, 60, 100, 260); b.addColorStop(0, "transparent"); b.addColorStop(1, "black");
-    rgbCtx.fillStyle = b; rgbCtx.fillRect(100, 60, 250, 200);
+    rgbCtx.fillRect(20, 20, 360, 220);
+    
+    // Degradados del cuadro
+    let w = rgbCtx.createLinearGradient(20, 0, 380, 0); 
+    w.addColorStop(0, "white"); w.addColorStop(1, "transparent");
+    rgbCtx.fillStyle = w; rgbCtx.fillRect(20, 20, 360, 220);
+    
+    let b = rgbCtx.createLinearGradient(0, 20, 0, 240); 
+    b.addColorStop(0, "transparent"); b.addColorStop(1, "black");
+    rgbCtx.fillStyle = b; rgbCtx.fillRect(20, 20, 360, 220);
 
-    // Barra HUE
-    let hG = rgbCtx.createLinearGradient(100, 0, 350, 0);
+    // 2. Barra HUE (Más ancha y alta)
+    let hG = rgbCtx.createLinearGradient(20, 0, 380, 0);
     ["red", "yellow", "green", "cyan", "blue", "magenta", "red"].forEach((c, i) => hG.addColorStop(i / 6, c));
-    rgbCtx.fillStyle = hG; rgbCtx.fillRect(100, 280, 250, 20);
+    rgbCtx.fillStyle = hG; rgbCtx.fillRect(20, 260, 360, 30);
 
-    // Preview
+    // 3. Barra Alpha (Fondo oscuro para ver el efecto)
+    rgbCtx.fillStyle = "#000"; rgbCtx.fillRect(20, 310, 360, 30);
+    let aG = rgbCtx.createLinearGradient(20, 0, 380, 0);
+    aG.addColorStop(0, `rgba(${final.r},${final.g},${final.b},0)`);
+    aG.addColorStop(1, `rgba(${final.r},${final.g},${final.b},1)`);
+    rgbCtx.fillStyle = aG; rgbCtx.fillRect(20, 310, 360, 30);
+
+    // 4. Preview (Más grande al lado)
     rgbCtx.fillStyle = colorActualParaLapiz;
-    rgbCtx.fillRect(380, 60, 80, 200);
+    rgbCtx.fillRect(400, 20, 80, 320);
 
     requestAnimationFrame(actualizarSelector);
-}
+} requestAnimationFrame(actualizarSelector);
+
 actualizarSelector();
 
 // --- LÓGICA DEL LÁPIZ SOBRE LA FOTO ---
