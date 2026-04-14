@@ -39,12 +39,12 @@ let nombreArchivo = "imagen_editada";
 function clamp(v) { return Math.max(0, Math.min(255, v)); }
 
 // --- CARGA DE IMAGEN ---
-upload.addEventListener("change", function(e) {
+upload.addEventListener("change", function (e) {
     const file = e.target.files[0];
     if (!file) return;
     nombreArchivo = file.name.replace(/\.[^/.]+$/, "");
     const img = new Image();
-    img.onload = function() {
+    img.onload = function () {
         canvas.width = img.width;
         canvas.height = img.height;
         ctx.drawImage(img, 0, 0);
@@ -68,7 +68,7 @@ function actualizarTextos() {
 
 function aplicarAjustes() {
     // Usamos currentImage (que guarda filtros previos) si existe, si no, originalImage
-    let fuente = currentImage || originalImage; 
+    let fuente = currentImage || originalImage;
     if (!fuente) return;
 
     const brillo = parseInt(sliderBrillo.value);
@@ -80,13 +80,13 @@ function aplicarAjustes() {
 
     for (let i = 0; i < data.length; i += 4) {
         for (let j = 0; j < 3; j++) {
-            data[i+j] = clamp((data[i+j] - 128) * contraste + 128 + brillo);
+            data[i + j] = clamp((data[i + j] - 128) * contraste + 128 + brillo);
         }
-        let r = data[i], g = data[i+1], b = data[i+2];
+        let r = data[i], g = data[i + 1], b = data[i + 2];
         let gray = 0.3 * r + 0.59 * g + 0.11 * b;
         data[i] = clamp(gray + saturation * (r - gray));
-        data[i+1] = clamp(gray + saturation * (g - gray));
-        data[i+2] = clamp(gray + saturation * (b - gray));
+        data[i + 1] = clamp(gray + saturation * (g - gray));
+        data[i + 2] = clamp(gray + saturation * (b - gray));
     }
     ctx.putImageData(imageData, 0, 0);
     mostrarInfo();
@@ -128,12 +128,12 @@ function applyKernel(kernel) {
 }
 function clampCoord(pos, max) { return Math.max(0, Math.min(max - 1, pos)); }
 
-const blurKernel = [[1,1,1],[1,1,1],[1,1,1]];
-const sharpenKernel = [[0,-1,0],[-1,5,-1],[0,-1,0]];
-const bordesKernel = [[0,-1,0],[-1,4,-1],[0,-1,0]];
-const relieveKernel = [[-2,-1,0],[-1,1,1],[0,1,2]];
-const lineashKernel = [[-1,-1,-1],[2,2,2],[-1,-1,-1]];
-const lineasvKernel = [[-1,2,-1],[-1,2,-1],[-1,2,-1]];
+const blurKernel = [[1, 1, 1], [1, 1, 1], [1, 1, 1]];
+const sharpenKernel = [[0, -1, 0], [-1, 5, -1], [0, -1, 0]];
+const bordesKernel = [[0, -1, 0], [-1, 4, -1], [0, -1, 0]];
+const relieveKernel = [[-2, -1, 0], [-1, 1, 1], [0, 1, 2]];
+const lineashKernel = [[-1, -1, -1], [2, 2, 2], [-1, -1, -1]];
+const lineasvKernel = [[-1, 2, -1], [-1, 2, -1], [-1, 2, -1]];
 
 btnBlur.onclick = () => applyKernel(blurKernel);
 btnSharpen.onclick = () => applyKernel(sharpenKernel);
@@ -164,7 +164,7 @@ btnSalt.onclick = () => {
     for (let i = 0; i < data.length; i += 4) {
         if (Math.random() < prob) {
             let val = Math.random() < 0.5 ? 0 : 255;
-            data[i] = data[i+1] = data[i+2] = val;
+            data[i] = data[i + 1] = data[i + 2] = val;
         }
     }
     ctx.putImageData(imageData, 0, 0);
@@ -183,11 +183,11 @@ btnMedian.onclick = () => {
             for (let ky = -1; ky <= 1; ky++) {
                 for (let kx = -1; kx <= 1; kx++) {
                     let ii = ((y + ky) * w + (x + kx)) * 4;
-                    valsR.push(copy[ii]); valsG.push(copy[ii+1]); valsB.push(copy[ii+2]);
+                    valsR.push(copy[ii]); valsG.push(copy[ii + 1]); valsB.push(copy[ii + 2]);
                 }
             }
             valsR.sort((a, b) => a - b); valsG.sort((a, b) => a - b); valsB.sort((a, b) => a - b);
-            data[i] = valsR[4]; data[i+1] = valsG[4]; data[i+2] = valsB[4];
+            data[i] = valsR[4]; data[i + 1] = valsG[4]; data[i + 2] = valsB[4];
         }
     }
     ctx.putImageData(imageData, 0, 0);
@@ -263,7 +263,7 @@ function hsvToRgbLocal(h, s, v) {
     else if (h < 180) [r1, g1, b1] = [0, c, x];
     else if (h < 240) [r1, g1, b1] = [0, x, c];
     else if (h < 300) [r1, g1, b1] = [x, 0, c];
-    else [r1, g1, b1] = [c, 0, x];
+    else[r1, g1, b1] = [c, 0, x];
     return { r: Math.round((r1 + m) * 255), g: Math.round((g1 + m) * 255), b: Math.round((b1 + m) * 255) };
 }
 
@@ -289,15 +289,15 @@ function actualizarSelector() {
     rgbCtx.fillStyle = `rgb(${base.r},${base.g},${base.b})`;
     rgbCtx.fillRect(100, 60, 250, 200);
     // Degradados
-    let w = rgbCtx.createLinearGradient(100,0,350,0); w.addColorStop(0,"white"); w.addColorStop(1,"transparent");
-    rgbCtx.fillStyle = w; rgbCtx.fillRect(100,60,250,200);
-    let b = rgbCtx.createLinearGradient(100,60,100,260); b.addColorStop(0,"transparent"); b.addColorStop(1,"black");
-    rgbCtx.fillStyle = b; rgbCtx.fillRect(100,60,250,200);
+    let w = rgbCtx.createLinearGradient(100, 0, 350, 0); w.addColorStop(0, "white"); w.addColorStop(1, "transparent");
+    rgbCtx.fillStyle = w; rgbCtx.fillRect(100, 60, 250, 200);
+    let b = rgbCtx.createLinearGradient(100, 60, 100, 260); b.addColorStop(0, "transparent"); b.addColorStop(1, "black");
+    rgbCtx.fillStyle = b; rgbCtx.fillRect(100, 60, 250, 200);
 
     // Barra HUE
-    let hG = rgbCtx.createLinearGradient(100,0,350,0);
-    ["red","yellow","green","cyan","blue","magenta","red"].forEach((c,i) => hG.addColorStop(i/6, c));
-    rgbCtx.fillStyle = hG; rgbCtx.fillRect(100,280,250,20);
+    let hG = rgbCtx.createLinearGradient(100, 0, 350, 0);
+    ["red", "yellow", "green", "cyan", "blue", "magenta", "red"].forEach((c, i) => hG.addColorStop(i / 6, c));
+    rgbCtx.fillStyle = hG; rgbCtx.fillRect(100, 280, 250, 20);
 
     // Preview
     rgbCtx.fillStyle = colorActualParaLapiz;
@@ -315,6 +315,9 @@ sliderGrosor.oninput = () => valorGrosor.textContent = sliderGrosor.value;
 
 function empezarTrazado(e) {
     if (!originalImage) return;
+
+    imagenAntesDeDibujar = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
     pintando = true;
     ctx.beginPath();
     const rect = canvas.getBoundingClientRect();
@@ -339,6 +342,21 @@ function realizarTrazado(e) {
 
 canvas.addEventListener("mousedown", empezarTrazado);
 canvas.addEventListener("mousemove", realizarTrazado);
-window.addEventListener("mouseup", () => { pintando = false; ctx.closePath(); });
+window.addEventListener("mouseup", () => {
+    pintando = false; 
+    ctx.closePath();
+    currentImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
+});
 
-document.getElementById('btnLimpiarTrazos').onclick = () => { if(originalImage) aplicarAjustes(); };
+
+document.getElementById('btnLimpiarTrazos').onclick = () => {
+    if (imagenAntesDeDibujar) {
+        // Ponemos la foto que tenía los filtros pero NO el lápiz
+        ctx.putImageData(imagenAntesDeDibujar, 0, 0);
+        
+        // Actualizamos la memoria principal
+        currentImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        
+        console.log("Lápiz eliminado, filtros conservados.");
+    }
+};
