@@ -272,20 +272,18 @@ function actualizarSelector() {
     rgbCtx.fillStyle = "#1e1e1e";
     rgbCtx.fillRect(0, 0, rgbCanvas.width, rgbCanvas.height);
 
-    // --- NUEVOS LÍMITES (Más grandes) ---
-    // X inicial: 20 | Ancho: 360 | Cuadro Alto: 220
-    
+
     if (dibu_mousePressed) {
-        // Cuadro principal (Saturación y Brillo)
+        // Cuadro principal 
         if (dibu_mouseX >= 20 && dibu_mouseX <= 380 && dibu_mouseY >= 20 && dibu_mouseY <= 240) {
             h_sat = (dibu_mouseX - 20) / 360;
             h_val = 1 - (dibu_mouseY - 20) / 220;
         }
-        // Barra Hue (Matiz)
+        // Barra Hue 
         if (dibu_mouseX >= 20 && dibu_mouseX <= 380 && dibu_mouseY >= 260 && dibu_mouseY <= 290) {
             h_hue = ((dibu_mouseX - 20) / 360) * 360;
         }
-        // Barra Alpha (Opacidad)
+        // Barra Alpha 
         if (dibu_mouseX >= 20 && dibu_mouseX <= 380 && dibu_mouseY >= 310 && dibu_mouseY <= 340) {
             h_alpha = (dibu_mouseX - 20) / 360;
         }
@@ -298,29 +296,29 @@ function actualizarSelector() {
     // 1. Dibujar Cuadro (Ahora de 360x220)
     rgbCtx.fillStyle = `rgb(${base.r},${base.g},${base.b})`;
     rgbCtx.fillRect(20, 20, 360, 220);
-    
+
     // Degradados del cuadro
-    let w = rgbCtx.createLinearGradient(20, 0, 380, 0); 
+    let w = rgbCtx.createLinearGradient(20, 0, 380, 0);
     w.addColorStop(0, "white"); w.addColorStop(1, "transparent");
     rgbCtx.fillStyle = w; rgbCtx.fillRect(20, 20, 360, 220);
-    
-    let b = rgbCtx.createLinearGradient(0, 20, 0, 240); 
+
+    let b = rgbCtx.createLinearGradient(0, 20, 0, 240);
     b.addColorStop(0, "transparent"); b.addColorStop(1, "black");
     rgbCtx.fillStyle = b; rgbCtx.fillRect(20, 20, 360, 220);
 
-    // 2. Barra HUE (Más ancha y alta)
+    // 2. Barra HUE 
     let hG = rgbCtx.createLinearGradient(20, 0, 380, 0);
     ["red", "yellow", "green", "cyan", "blue", "magenta", "red"].forEach((c, i) => hG.addColorStop(i / 6, c));
     rgbCtx.fillStyle = hG; rgbCtx.fillRect(20, 260, 360, 30);
 
-    // 3. Barra Alpha (Fondo oscuro para ver el efecto)
+    // 3. Barra Alpha 
     rgbCtx.fillStyle = "#000"; rgbCtx.fillRect(20, 310, 360, 30);
     let aG = rgbCtx.createLinearGradient(20, 0, 380, 0);
     aG.addColorStop(0, `rgba(${final.r},${final.g},${final.b},0)`);
     aG.addColorStop(1, `rgba(${final.r},${final.g},${final.b},1)`);
     rgbCtx.fillStyle = aG; rgbCtx.fillRect(20, 310, 360, 30);
 
-    // 4. Preview (Más grande al lado)
+    // 4. Preview 
     rgbCtx.fillStyle = colorActualParaLapiz;
     rgbCtx.fillRect(400, 20, 80, 320);
 
@@ -365,7 +363,7 @@ function realizarTrazado(e) {
 canvas.addEventListener("mousedown", empezarTrazado);
 canvas.addEventListener("mousemove", realizarTrazado);
 window.addEventListener("mouseup", () => {
-    pintando = false; 
+    pintando = false;
     ctx.closePath();
     currentImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
 });
@@ -375,10 +373,10 @@ document.getElementById('btnLimpiarTrazos').onclick = () => {
     if (imagenAntesDeDibujar) {
         // Ponemos la foto que tenía los filtros pero NO el lápiz
         ctx.putImageData(imagenAntesDeDibujar, 0, 0);
-        
+
         // Actualizamos la memoria principal
         currentImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        
+
         console.log("Lápiz eliminado, filtros conservados.");
     }
 };

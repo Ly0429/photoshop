@@ -18,9 +18,38 @@
 
         header {
             background: #1e1e1e;
-            padding: 10px;
+            padding: 10px 230px;
             text-align: center;
             border-bottom: 2px solid #333;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            color: #46ce06;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: 800;
+        }
+
+        .upload-container {
+            background: #333;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 1px dashed #757575;
+            transition: 0.3s;
+        }
+
+        .upload-container:hover {
+            background: #444;
+            border-color: #333;
+        }
+
+        
+        input[type="file"] {
+            cursor: pointer;
+            font-family: inherit;
+            color: #ccc;
         }
 
         .main-container {
@@ -57,13 +86,12 @@
             max-width: 100%;
             max-height: 80vh;
             border: 2px solid #555;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
             background: #111;
         }
 
         canvas#rgbCanvas {
             width: 100% !important;
-            background: #fff;
             cursor: crosshair;
             margin-top: 10px;
             width: 100%;
@@ -73,10 +101,10 @@
 
         .section-title {
             background: #333;
-            padding: 8px;
+            padding: 4px;
             margin: 15px 0 10px 0;
             border-radius: 4px;
-            font-size: 14px;
+            font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 1px;
             text-align: center;
@@ -84,7 +112,7 @@
 
         .control-group {
             margin-bottom: 15px;
-            font-size: 13px;
+            font-size: 12px;
         }
 
         button {
@@ -149,7 +177,10 @@
 <body>
 
     <header>
-        <strong>Mini Photoshop </strong> | <input type="file" id="upload" accept="image/*">
+        <h1>Mini Photoshop</h1>
+        <div class="upload-container">
+            <input type="file" id="upload" accept="image/*">
+        </div>
     </header>
 
     <div class="main-container">
@@ -216,18 +247,18 @@
                 <input type="range" id="sliderNoise" min="0" max="100" value="0">
             </div>
 
-            <div class="section-title">Selector de Color Pro</div>
+            <div class="section-title">Selector de Color</div>
             <div class="control-group" style="text-align: center;">
                 <canvas id="rgbCanvas" width="500" height="400"
                     style="width: 100%; height: auto; border-radius: 8px;"></canvas>
             </div>
 
-            <div class="section-title">Herramientas de Lápiz</div>
+            <div class="section-title">Herramienta Lápiz</div>
             <div class="control-group">
                 Grosor: <span id="valorGrosor">5</span>
                 <input type="range" id="sliderGrosor" min="1" max="50" value="5">
             </div>
-            <button id="btnLimpiarTrazos" style="background:#444">Limpiar Lápiz (Solo trazos)</button>
+            <button id="btnLimpiarTrazos" style="background:#444">Limpiar trazos Lápiz </button>
         </div>
 
         <script src="photoshop4.js"></script>
