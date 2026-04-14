@@ -19,10 +19,11 @@
         }
 
         header {
-            background: #1e1e1e;
+            background: linear-gradient(135deg, #1e1e1e, #2c1f4a, #615fdd);
             padding: 10px 230px;
             text-align: center;
-            border-bottom: 2px solid #333;
+            border-bottom: 2px solid #b38add;
+            box-shadow: 0 4px 15px rgba(179, 138, 221, 0.4);
         }
 
         header h1 {
@@ -92,7 +93,7 @@
         /* Columnas laterales */
         .sidebar {
             width: 150px;
-            background: #1e1e1e;
+            background: #0b0818;
             padding: 15px;
             overflow-y: auto;
             border-right: 1px solid #333;
@@ -111,6 +112,23 @@
             padding: 20px;
             position: relative;
             overflow: auto;
+        }
+
+        .editor-view {
+            position: relative;
+            /* clave */
+        }
+
+        .upload-container {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+
+            background: #6c69fd31;
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: 1px dashed #757575;
         }
 
         canvas#canvas {
@@ -209,9 +227,7 @@
 
     <header>
         <h1>Mini Photoshop</h1>
-        <div class="upload-container">
-            <input type="file" id="upload" accept="image/*">
-        </div>
+
     </header>
 
     <div class="main-container">
@@ -257,7 +273,12 @@
         <div class="editor-view">
             <div id="placeholder" style="color: #555;">Sube una imagen para empezar</div>
             <canvas id="canvas" class="oculto"></canvas>
+            <div class="upload-container">
+                <input type="file" id="upload" accept="image/*">
+            </div>
         </div>
+
+
 
         <div class="sidebar">
             <div class="section-title">Filtros Frecuencia</div>
@@ -290,6 +311,7 @@
                 <input type="range" id="sliderGrosor" min="1" max="50" value="5">
             </div>
             <button id="btnLimpiarTrazos" style="background:#444">Limpiar trazos Lápiz </button>
+
         </div>
 
         <script src="photoshop5.js"></script>
