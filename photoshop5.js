@@ -31,15 +31,15 @@ const btnSalt = document.getElementById("salt");
 const btnMedian = document.getElementById("median");
 const sliderNoise = document.getElementById("sliderNoise");
 
-// Variables de estado
+// Variables 
 let originalImage = null;
-let currentImage = null; // Para filtros acumulativos
+let currentImage = null; 
 let nombreArchivo = "imagen_editada";
 
-// --- UTILIDADES ---
+
 function clamp(v) { return Math.max(0, Math.min(255, v)); }
 
-// --- CARGA DE IMAGEN ---
+// cargar la imagen 
 upload.addEventListener("change", function (e) {
     const file = e.target.files[0];
     if (!file) return;
@@ -59,7 +59,7 @@ upload.addEventListener("change", function (e) {
     img.src = URL.createObjectURL(file);
 });
 
-// --- LOGICA DEL EDITOR (IZQUIERDA) ---
+
 function actualizarTextos() {
     valorBrillo.textContent = sliderBrillo.value;
     valorContraste.textContent = (sliderContraste.value / 100).toFixed(2);
@@ -69,7 +69,7 @@ function actualizarTextos() {
 }
 
 function aplicarAjustes() {
-    // Usamos currentImage (que guarda filtros previos) si existe, si no, originalImage
+    // Usamos currentImage (que guarda filtros utilizados) si existe, si no, originalImage
     let fuente = currentImage || originalImage;
     if (!fuente) return;
 
@@ -98,7 +98,7 @@ function mostrarInfo() {
     info.innerHTML = `<strong>${nombreArchivo}</strong><br>${canvas.width}x${canvas.height}px<br>F: ${formato.value}`;
 }
 
-// --- FILTROS DE CONVOLUCIÓN (DERECHA) ---
+// filtros de la derecha 
 function applyKernel(kernel) {
     if (!originalImage) return;
     let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -144,7 +144,7 @@ btnRelieve.onclick = () => applyKernel(relieveKernel);
 btnLineash.onclick = () => applyKernel(lineashKernel);
 btnLineasv.onclick = () => applyKernel(lineasvKernel);
 
-// --- RUIDO Y MEDIANA (DERECHA) ---
+// lo del ruido y mediana
 btnNoise.onclick = () => {
     let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     let data = imageData.data;
@@ -198,7 +198,7 @@ btnMedian.onclick = () => {
 
 
 
-// --- RESET Y DESCARGA ---
+// lo de la descarga
 document.getElementById('btnReset').onclick = () => {
     if (!originalImage) return;
     sliderBrillo.value = 0; sliderContraste.value = 100; sliderSaturation.value = 100;
@@ -222,7 +222,7 @@ document.getElementById('btnDescargar').onclick = () => {
     }, formato.value, parseFloat(sliderCalidad.value));
 };
 
-// Eventos de entrada para ajustes en tiempo real
+// para editar 
 [sliderBrillo, sliderContraste, sliderSaturation].forEach(s => s.oninput = () => {
     actualizarTextos();
     aplicarAjustes();
@@ -232,7 +232,7 @@ sliderEscala.oninput = actualizarTextos;
 formato.onchange = actualizarTextos;
 
 
-// --- VARIABLES PARA EL SELECTOR Y LÁPIZ ---
+// lo del lapiz
 const rgbCanvas = document.getElementById("rgbCanvas");
 const rgbCtx = rgbCanvas.getContext("2d");
 const sliderGrosor = document.getElementById('sliderGrosor');
@@ -242,11 +242,11 @@ let dibu_mousePressed = false;
 let dibu_mouseX = 0;
 let dibu_mouseY = 0;
 
-// Variables de color (HSV)
+
 let h_hue = 120, h_sat = 1, h_val = 1, h_alpha = 1;
 let colorActualParaLapiz = "rgba(0, 255, 0, 1)";
 
-// --- LÓGICA DEL SELECTOR PERSONALIZADO ---
+//el lapiz
 
 rgbCanvas.addEventListener("mousemove", e => {
     const rect = rgbCanvas.getBoundingClientRect();
@@ -269,6 +269,8 @@ function hsvToRgbLocal(h, s, v) {
     return { r: Math.round((r1 + m) * 255), g: Math.round((g1 + m) * 255), b: Math.round((b1 + m) * 255) };
 }
 
+
+//el cuadrito del RGB que hice
 function actualizarSelector() {
     rgbCtx.clearRect(0, 0, rgbCanvas.width, rgbCanvas.height);
     rgbCtx.fillStyle = "#1e1e1e";
@@ -276,16 +278,16 @@ function actualizarSelector() {
 
 
     if (dibu_mousePressed) {
-        // Cuadro principal 
+        
         if (dibu_mouseX >= 20 && dibu_mouseX <= 380 && dibu_mouseY >= 20 && dibu_mouseY <= 240) {
             h_sat = (dibu_mouseX - 20) / 360;
             h_val = 1 - (dibu_mouseY - 20) / 220;
         }
-        // Barra Hue 
+       
         if (dibu_mouseX >= 20 && dibu_mouseX <= 380 && dibu_mouseY >= 260 && dibu_mouseY <= 290) {
             h_hue = ((dibu_mouseX - 20) / 360) * 360;
         }
-        // Barra Alpha 
+       
         if (dibu_mouseX >= 20 && dibu_mouseX <= 380 && dibu_mouseY >= 310 && dibu_mouseY <= 340) {
             h_alpha = (dibu_mouseX - 20) / 360;
         }
@@ -295,7 +297,7 @@ function actualizarSelector() {
     let final = hsvToRgbLocal(h_hue, h_sat, h_val);
     colorActualParaLapiz = `rgba(${final.r}, ${final.g}, ${final.b}, ${h_alpha})`;
 
-    // 1. Dibujar Cuadro (Ahora de 360x220)
+    // dibuja el cuadrado
     rgbCtx.fillStyle = `rgb(${base.r},${base.g},${base.b})`;
     rgbCtx.fillRect(20, 20, 360, 220);
 
@@ -308,19 +310,19 @@ function actualizarSelector() {
     b.addColorStop(0, "transparent"); b.addColorStop(1, "black");
     rgbCtx.fillStyle = b; rgbCtx.fillRect(20, 20, 360, 220);
 
-    // 2. Barra HUE 
+    //Barra HUE 
     let hG = rgbCtx.createLinearGradient(20, 0, 380, 0);
     ["red", "yellow", "green", "cyan", "blue", "magenta", "red"].forEach((c, i) => hG.addColorStop(i / 6, c));
     rgbCtx.fillStyle = hG; rgbCtx.fillRect(20, 260, 360, 30);
 
-    // 3. Barra Alpha 
+    // Barra Alpha 
     rgbCtx.fillStyle = "#000"; rgbCtx.fillRect(20, 310, 360, 30);
     let aG = rgbCtx.createLinearGradient(20, 0, 380, 0);
     aG.addColorStop(0, `rgba(${final.r},${final.g},${final.b},0)`);
     aG.addColorStop(1, `rgba(${final.r},${final.g},${final.b},1)`);
     rgbCtx.fillStyle = aG; rgbCtx.fillRect(20, 310, 360, 30);
 
-    // 4. Preview 
+    
     rgbCtx.fillStyle = colorActualParaLapiz;
     rgbCtx.fillRect(400, 20, 80, 320);
 
@@ -329,7 +331,7 @@ function actualizarSelector() {
 
 actualizarSelector();
 
-// --- LÓGICA DEL LÁPIZ SOBRE LA FOTO ---
+//el lapiz en la foto 
 
 let pintando = false;
 
@@ -376,7 +378,7 @@ document.getElementById('btnLimpiarTrazos').onclick = () => {
         // Ponemos la foto que tenía los filtros pero NO el lápiz
         ctx.putImageData(imagenAntesDeDibujar, 0, 0);
 
-        // Actualizamos la memoria principal
+        // Actualizamos para que no se quede ahi 
         currentImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
         console.log("Lápiz eliminado, filtros conservados.");
