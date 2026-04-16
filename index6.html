@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Modak&family=Rubik+Bubbles&family=Titan+One&display=swap"
+        rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Mini Photoshop Norely 9</title>
+    <style>
+        body {
+            margin: 0;
+            background: #121212;
+            color: white;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e1e1e, #2c1f4a, #615fdd);
+            padding: 10px 230px;
+            text-align: center;
+            border-bottom: 2px solid #b38add;
+            box-shadow: 0 4px 15px rgba(179, 138, 221, 0.4);
+        }
+
+        header h1 {
+            margin: 0;
+            font-family: 'Modak', system-ui;
+            font-size: 4rem;
+            color: #b38add;
+            text-transform: uppercase;
+
+            letter-spacing: 3px;
+            -webkit-text-stroke: 1px #9b6cc3;
+
+
+            text-shadow:
+                0 1px 0 #9b6cc3,
+                0 2px 0 #8a59b5,
+                0 3px 0 #7a4aab,
+                0 4px 0 #cab2e6,
+                0 10px 10px rgba(0, 0, 0, 0.5);
+
+            line-height: 1.2;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        header h1 {
+            display: inline-block;
+            animation: bounce 2s infinite;
+        }
+
+        .upload-container {
+            background: #333;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 1px dashed #757575;
+            transition: 0.3s;
+        }
+
+        .upload-container:hover {
+            background: #444;
+            border-color: #333;
+        }
+
+
+        input[type="file"] {
+            cursor: pointer;
+            font-family: inherit;
+            color: #ccc;
+        }
+
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Columnas laterales */
+        .sidebar {
+            width: 150px;
+            background: #0b0818;
+            padding: 15px;
+            overflow-y: auto;
+            border-right: 1px solid #333;
+            border-left: 1px solid #333;
+            flex-shrink: 0;
+        }
+
+        /* Centro */
+        .editor-view {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+            padding: 20px;
+            position: relative;
+            overflow: auto;
+        }
+
+        .editor-view {
+            position: relative;
+            /* clave */
+        }
+
+        .upload-container {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+
+            background: #6c69fd31;
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: 1px dashed #757575;
+        }
+
+        canvas#canvas {
+            max-width: 100%;
+            max-height: 80vh;
+            border: 2px solid #555;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            background: #111;
+        }
+
+        canvas#rgbCanvas {
+            width: 100% !important;
+            cursor: crosshair;
+            margin-top: 10px;
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .section-title {
+            background: #333;
+            padding: 4px;
+            margin: 15px 0 10px 0;
+            border-radius: 4px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        .control-group {
+            margin-bottom: 15px;
+            font-size: 12px;
+        }
+
+        button {
+            width: 100%;
+            margin: 4px 0;
+            font-size: 12px;
+            padding: 8px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+            background: #444;
+            color: white;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: #666;
+        }
+
+        .btn-action {
+            background: #3dcf97;
+        }
+
+        .btn-reset {
+            background: #c7307b;
+        }
+
+        .btn-download {
+            background: #615fdd;
+            margin-top: 10px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+        }
+
+        select {
+            width: 100%;
+            padding: 5px;
+            background: #333;
+            color: white;
+            border: 1px solid #555;
+        }
+
+        #info {
+            font-size: 11px;
+            background: #222;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .oculto {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Mini Photoshop</h1>
+
+    </header>
+
+    <div class="main-container">
+        <div class="sidebar">
+            <div class="section-title">Ajustes Básicos</div>
+            <div class="control-group">
+                Brillo: <span id="valorBrillo">0</span>
+                <input type="range" id="brillo" min="-100" max="100" value="0">
+            </div>
+            <div class="control-group">
+                Contraste: <span id="valorContraste">1.00</span>
+                <input type="range" id="contraste" min="0" max="200" value="100">
+            </div>
+            <div class="control-group">
+                Saturación: <span id="valorSaturation">1.00</span>
+                <input type="range" id="saturation" min="0" max="200" value="100">
+            </div>
+
+            <div class="section-title">Exportación</div>
+            <div class="control-group">
+                Calidad: <span id="valorCalidad">0.8</span>
+                <input type="range" id="calidad" min="0.1" max="1" step="0.1" value="0.8">
+            </div>
+            <div class="control-group">
+                Escala: <span id="valorEscala">100%</span>
+                <input type="range" id="escala" min="10" max="200" value="100">
+            </div>
+
+
+            <div class="section-title">Transformación</div>
+
+
+            <div class="control-group">
+                Escala Vista: <span id="valorEscalaVista">100%</span>
+                <input type="range" id="escalaVista" min="0" max="100" value="100">
+            </div>
+
+            <button id="rotarIzquierda">⟲ Rotar Izquierda</button>
+            <button id="rotarDerecha">⟳ Rotar Derecha</button>
+
+
+            <div class="control-group">
+                Formato:
+                <select id="formato">
+                    <option value="image/png">PNG</option>
+                    <option value="image/jpeg">JPG</option>
+                    <option value="image/webp">WEBP</option>
+                </select>
+            </div>
+
+            <button id="btnReset" class="btn-reset">Resetear Todo</button>
+            <button id="btnDescargar" class="btn-download">Descargar Imagen</button>
+
+            <div id="info">Sube una imagen para ver los datos...</div>
+        </div>
+
+        <div class="editor-view">
+            <div id="placeholder" style="color: #555;">Sube una imagen para empezar</div>
+            <canvas id="canvas" class="oculto"></canvas>
+            <div class="upload-container">
+                <input type="file" id="upload" accept="image/*">
+            </div>
+        </div>
+
+
+
+        <div class="sidebar">
+            <div class="section-title">Filtros Frecuencia</div>
+            <button id="blur">Low-pass</button>
+            <button id="sharpen">High-pass</button>
+            <button id="bordes">Bordes</button>
+            <button id="relieve">Relieve</button>
+            <button id="lineash">Lineash</button>
+            <button id="lineasv">Lineasv</button>
+
+            <div class="section-title">Efectos y Ruido</div>
+            <button id="noise" style="background:#615fdd">Ruido Gaussiano</button>
+            <button id="salt" style="background:#4bc9ce">Sal y Pimienta</button>
+            <button id="median" style="background:#c7307b">Mediana</button>
+
+            <div class="control-group">
+                <label>Intensidad Ruido</label>
+                <input type="range" id="sliderNoise" min="0" max="100" value="0">
+            </div>
+
+            <div class="section-title">Selector de Color</div>
+            <div class="control-group" style="text-align: center;">
+                <canvas id="rgbCanvas" width="500" height="400"
+                    style="width: 100%; height: auto; border-radius: 8px;"></canvas>
+            </div>
+
+            <div class="section-title">Herramienta Lápiz</div>
+            <div class="control-group">
+                Grosor: <span id="valorGrosor">5</span>
+                <input type="range" id="sliderGrosor" min="1" max="50" value="5">
+            </div>
+            <button id="btnLimpiarTrazos" style="background:#444">Limpiar trazos Lápiz </button>
+
+        </div>
+
+        <script src="photoshop6.js"></script>
+</body>
+
+</html>
